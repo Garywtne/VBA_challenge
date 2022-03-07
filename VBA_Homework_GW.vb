@@ -54,6 +54,12 @@ Dim GreatestIncrease As Double
 Dim GreatestDecrease As Double
 
 
+
+
+
+
+
+
 'loop through the worksheets
     
     For Each ws In Worksheets
@@ -77,7 +83,7 @@ Dim GreatestDecrease As Double
              
     
         ' find and record the last row with data
-        lastrow = Cells(Rows.Count, "A").End(xlUp).Row
+        lastrow = ws.Cells(Rows.Count, "A").End(xlUp).Row
 
             For i = 2 To lastrow
             
@@ -90,7 +96,7 @@ Dim GreatestDecrease As Double
                 
                     If total_stock_volume = 0 Then
                     
-                    ws.Range("I" & 2 + j).Value = Cells(i, 1).Value
+                    ws.Range("I" & 2 + j).Value = ws.Cells(i, 1).Value
                     ws.Range("J" & 2 + j).Value = 0
                     ws.Range("K" & 2 + j).Value = "%" & 0
                     ws.Range("L" & 2 + j).Value = 0
@@ -155,18 +161,31 @@ Dim GreatestDecrease As Double
        ' find the "Greatest % increase", "Greatest % decrease" & "Greatest total volume" for each sheet and populate into the correct cells
        
        
+       ' give the variables already declared the correct values
+              
        GreatestIncrease = Application.WorksheetFunction.Max(ws.Columns("K")) * 100
        GreatestDecrease = Application.WorksheetFunction.Min(ws.Columns("K")) * 100
+            
+             
+      
+       'populate the values with correct formatting into the correct cells
        
        
-       
-        
-       ws.Range("p2").Value = "Ticker1"
        ws.Range("q2").Value = "%" & GreatestIncrease
-       ws.Range("p3").Value = "Ticker2"
+       
        ws.Range("q3").Value = "%" & GreatestDecrease
-       ws.Range("p4").Value = "Ticker3"
+       
        ws.Range("q4").Value = Application.WorksheetFunction.Max(ws.Columns("l"))
+       
+       
+       'use xlookup to find the corresponding ticker values and populate into the correct cells
+       
+       
+       ws.Range("p2").Value = Application.WorksheetFunction.XLookup(ws.Range("q2"), ws.[K:K], ws.[I:I], False)
+       
+       ws.Range("p3").Value = Application.WorksheetFunction.XLookup(ws.Range("q3"), ws.[K:K], ws.[I:I], False)
+       
+       ws.Range("p4").Value = Application.WorksheetFunction.XLookup(ws.Range("q4"), ws.[L:L], ws.[I:I], False)
        
        
              
